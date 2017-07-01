@@ -1,0 +1,24 @@
+order_id|date|user_id|||could not convert string to float: item_price_1
+54374|20150501|123|30.0|http://www.insacart.com/favorites|
+54356|20150501|124|129.3|http://www.insacart.com/favorites|
+54234|20150501|123|111.2|http://www.insacart.com/favorites|
+54375|20150501|134|80.6|http://www.insacart.com/|
+54376|20150501|126|37.5|http://www.insacart.com/|
+12094|20150501|123|||could not convert string to float: 
+54324||129|33.85|http://www.insacart.com/|
+54374|20150501|125|145.69|http://www.insacart.com/|
+54564|20150501|126|49.6|http://www.insacart.com/|
+54884|20150503|127|30.99|http://www.insacart.com/favorites|
+44374|20150501|128|64.6|http://www.insacart.com/favorites|
+34374|20150501|129|0.0|http://www.yahoo.com/|Invalid URL
+54004|20150503|129|108.8||Invalid URL
+54974|20150503|120|30.7|google.com|Invalid URL
+54374|20150501|345|8.0|http://www.insacart.com/cart|
+52374|20150401|5678|41.67|http://www.%|Invalid URL
+4374|20150501|123|||could not convert string to float: 
+|||||Insufficient Order information
+54374||424|21.75|http://www.insacart.com/search|
+549374|20150501|325|90.0|http://www.insacart.com/favorites|
+54334|20150501|428|80.0|http://www.insacart.com/search|
+50374|20150501|429|1000.0|http://www.insacart.com/|
+54374|20150501|123|||could not convert string to float: A1

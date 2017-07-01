@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+# this script parses the input file and calculates average item price
+import sys
+
+infile = '/Users/msaha/PycharmProjects/data.txt'
+infile_hand = open(infile, 'r')
+outfile = '/Users/msaha/PycharmProjects/new_data.txt'
+outfile_hand = open(outfile, 'w')
+
+for line in infile_hand:
+    try:
+
+
+item_price_list = list(item_price_1, item_price_2, item_price_3, item_price_4)
+print item_list

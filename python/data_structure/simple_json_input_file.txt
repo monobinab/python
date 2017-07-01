@@ -1,0 +1,3 @@
+{"modelId":"33", "modelName":"S_SCR_FOOTWEAR", "format":"Sears", "category":"Footwear", "tag":"0129","score":0.0044766 ,"percentile":71, "rank":1}
+{"modelId":"76", "modelName":"S_SCR_LG_SNOW_BLOWER", "format":"Sears", "category":"Lawn & Garden - snow blower", "tag":"0148","score":0.0000165157 ,"percentile":59, "rank":1}
+{"modelId":"14", "modelName":"K_SCR_LG", "format":"Kmart", "category":"Lawn & Garden", "tag":"2133","score":0.0002504636 ,"percentile":17, "rank":1}

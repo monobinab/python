@@ -1,0 +1,10 @@
+from os import walk
+dirthpath = /incoming/rts/flume
+dirnames = Jan/2015
+filenames = jboss*
+
+f = []
+for (dirpath, dirnames, filenames) in walk(mypath):
+    f.extend(filenames)
+    hadoop jar /opt/cloudera/parcels/CDH-5.1.2-1.cdh5.1.2.p470.103/lib/hadoop-mapreduce/hadoop-streaming-2.3.0-cdh5.1.2.jar -files RtsLogApiResponseMapper.py  -mapper RtsLogApiResponseMapper.py -reducer org.apache.hadoop.mapred.lib.IdentityReducer -input dirpath/dirnames/filenames -output /user/msaha/rts/incoming_response
+    break

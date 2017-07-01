@@ -1,0 +1,96 @@
+data structure notes
+
+get the value of a key 
+d={'one': 'uno', 'two' : 'dos'}
+d['one']
+d.get('one', 'unknown') -> unknown is default. We should use it only when we can put a meaningful default. Otherwise it is not good idea.
+.pop  => get the value and removes from dictionary
+d.pop('one') => remove the key of the dict
+d.popitem => to remove an item/entry, both the key and the value, but you cannot say which item is removed.
+
+d = {'uno': 'one', 'dos': 'two', 'tres' : 'three'}
+for key in d:   => iterate over keys of dictionaries
+	print key
+dos
+tres
+uno
+for key in d.keys(): => to iterate over keys
+	print (key)
+
+for value in d.values(): => to iterate over the values of dict
+	print (value)
+two
+three
+one
+for item in d.items(): => print key value as tuple
+	print (item)
+('dos', 'two')
+('tres', 'three')
+('uno', 'one')
+the sorting is based on keys
+
+d = {'uno': 'one', 'dos': 'two', 'tres' : 'three'}
+keys = d.keys() => outputs a different data type to make the dictionary mutable so that more keys can be inserted, otherwise you get error that dictionaries cannot be modified
+
+keys
+outputs -> dict_keys(['dos', 'tres', 'uno'])
+d['cinco'] = 'five'
+d
+outputs => {'dos':'two', 'tres':'three', 'uno':'one', 'cinco':'five' }
+=========================================================================================
+If you want to remove certain key from the dictionary then idiomatic way to do so is you have to have the key first and then delete it
+deleted_keys = set()
+for key in d:
+	if key == 'uno':
+		deleted_keys.add(key)
+
+for key in deleted_keys:
+	del d[key]
+==============================================================================================
+If you want to add an item in dict:
+d = {'uno': 'one', 'dos': 'two', 'tres' : 'three'}
+
+d['uno'].add('ek')
+d[quatro].add('four') => this will throw error as the key doesn't exist.
+
+So if the key is not present in the dictionary, first add it as key. Keys are like set as they are unique.
+if 'quatro' not in d:
+	d['quatro'] = set()
+d['quatro'].add('four')
+
+Top three lines of code can be written into one line like below:
+d.setdeault('quatro', set()).add('four')
+
+Dict.__Missing__   => an important method so that the key will become case insensitive
+class lowercasedict(dict):
+	def __missing__(self, key):
+		return self[key.lower()]
+
+d = lowercasedict({'uno': 'one', 'dos': 'two', 'tres' : 'three'})
+d['Uno']
+d.get('UNO', d.get('uno'))
+
+=========================================================================================
+Dict Comprehension
+{x:x**2 for x in range(10)} => this will create a dictionary with keys ranging from 0 to 10 (not including 10) and values as squared of keys
+
+{x:x**2 for x in range(10) if x%2 == 0}
+
+substitution cipher
+from string import ascii_lowercase
+ascii_lowercase
+from random import shuffle
+shuffle(ascii_lowercase) => this will give error as string is immutable
+so we have to convert it to list and then shuffle the list
+alphabet = list(ascii_lowercase)
+shuffle(alphabet)
+codebook = {x:alphabet.pop() for x in ascii_lowercase} => values are created by popping the values from the list
+message = 'python is great!'
+encoded = ''.join(codebook.get(m, '') for m in message) => for each letter in the message we will look up the codebook and get the value of it and if the letter is not present in codebook as key then we will replace with empty string and then we join it to form the string
+
+We can create a reverse codebook
+reverse_codebook = {v:k for k, v in codebook.items()}
+
+we can decode the 'encoded' variable using reverse_codebook
+print(''.join(reverse_codebook.get(m,'') for m in <encoded variable>))
+

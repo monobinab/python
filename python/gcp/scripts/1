@@ -1,0 +1,7 @@
+requestmetadata = httpRequest['metadata']
+        requestoperation = httpRequest['operation']
+        protopayload = httpRequest['protopayload']
+
+        for httpRequest in outerjson['httpRequest']:
+            insertId = httpRequest['insertId']
+            requestlog = httpRequest['log']

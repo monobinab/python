@@ -1,0 +1,1 @@
+select lyl_id_no from `syw-rts-dev.rts_dataset.rts_member_info_pre` limit 10;

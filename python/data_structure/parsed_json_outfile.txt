@@ -1,0 +1,3 @@
+33|S_SCR_FOOTWEAR|Sears|Footwear|0129|0.0044766|71|1
+76|S_SCR_LG_SNOW_BLOWER|Sears|Lawn & Garden - snow blower|0148|1.65157e-05|59|1
+14|K_SCR_LG|Kmart|Lawn & Garden|2133|0.0002504636|17|1

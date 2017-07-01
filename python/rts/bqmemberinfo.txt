@@ -1,0 +1,143 @@
+Insert into `syw-rts-dev.rts_dataset.rts_member_info_pre`
+(
+lyl_id_no,
+srs,
+szip,
+kmt,
+kzip,
+eid,
+opt,
+srse, 
+kmte,
+sywe,
+st,
+mbl
+)
+                        SELECT cast(m.lyl_id_no as string) as lyl_id_no, 
+                        CASE
+                        WHEN s.fls_primary_store IS NOT NULL THEN s.fls_primary_store
+                        WHEN s.fls_rfm_store  IS NOT NULL THEN s.fls_rfm_store
+                        WHEN s.fls_closest_store  IS NOT NULL THEN s.fls_closest_store
+                        ELSE '0000000' END AS srs , 
+                        '00000' AS szip,
+                        CAST(CASE
+                        WHEN s.kmt_primary_store IS NOT NULL THEN TRIM(cast(s.kmt_primary_store as string))
+                        WHEN s.kmt_rfm_store  IS NOT NULL THEN TRIM(cast(s.kmt_rfm_store as string))
+                        WHEN s.kmt_closest_store  IS NOT NULL THEN TRIM(cast(s.kmt_closest_store as string))
+                        ELSE '0000' END AS string) AS kmt
+                        , '00000' AS kzip
+                        , CASE WHEN e.eml_ad_id IS NOT NULL THEN e.eml_ad_id ELSE CAST(0 AS int64) END AS eid
+                        , CAST('N' as string) as opt
+                        , CAST('N' as string) as srse
+                        , CAST('N' as string) as kmte
+                        , CAST('N' as string) as sywe
+                        , CAST('N/A' as string) as st
+                        , CAST('N' as string) as mbl
+                        FROM `syw-analytics-repo-prod.crm_perm_tbls.msm_propensity_weekly` AS m
+                        LEFT JOIN `syw-analytics-repo-prod.crm_perm_tbls.sywr_primary_store_new` AS s
+                        ON m.lyl_id_no=s.lyl_id_no
+                        LEFT JOIN `syw-analytics-repo-prod.lci_loyal_views.sywr_email_id` AS e
+                        ON m.lyl_id_no=e.lyl_id_no
+                        ;
+
+UPDATE `syw-rts-dev.rts_dataset.rts_member_info_pre`
+SET szip=f.zip_cd 
+                  FROM (SELECT fty_id_no 
+                  , CAST(CASE  
+                  WHEN zip_cd < 100 THEN concat('000',TRIM(cast(zip_cd as string))) 
+                  WHEN zip_cd < 100 THEN concat('00',TRIM(cast(zip_cd as string)))  
+                  WHEN zip_cd < 10000 THEN concat('0',TRIM(cast(zip_cd as string)))   
+                  ELSE TRIM(cast(zip_cd as string))  
+                  END AS string) AS zip_cd 
+                  FROM `syw-analytics-repo-prod.crm_mart1_tbls.crm_sears_retail_fty`) AS f 
+                  WHERE `syw-rts-dev.rts_dataset.rts_member_info_pre`.srs = f.fty_id_no;
+
+
+UPDATE `syw-rts-dev.rts_dataset.rts_member_info_pre` 
+SET kzip=k.zip_cd 
+                  FROM (SELECT CAST(locn_nbr AS string) AS locn_nbr 
+                  , CAST(CASE  
+                  WHEN zip_cd < 100 THEN concat('000',TRIM(cast(zip_cd as string))) 
+                  WHEN zip_cd < 100 THEN concat('00',TRIM(cast(zip_cd as string)))  
+                  WHEN zip_cd < 10000 THEN concat('0',TRIM(cast(zip_cd as string)))  
+                  ELSE TRIM(cast(zip_cd as string))  
+                  END AS string) AS zip_cd 
+                  FROM `syw-analytics-repo-prod.lci_dw_views.mstr_locn_tbl`  
+                  WHERE dvsn_cd = '2') AS k 
+                  WHERE `syw-rts-dev.rts_dataset.rts_member_info_pre`.kmt = k.locn_nbr;   
+
+UPDATE `syw-rts-dev.rts_dataset.rts_member_info_pre`  
+SET srse='Y' 
+                  FROM 
+                  (SELECT m.lyl_id_no 
+                  FROM `syw-analytics-repo-prod.unica_cmdm_views.sears_active_sts_flg` AS a  
+                  JOIN `syw-analytics-repo-prod.lci_loyal_views.sywr_email_id` AS b 
+                  ON a.eml_ad_id=b.eml_ad_id 
+                  JOIN `syw-analytics-repo-prod.lci_loyal_views.sywr_mbr` AS m 
+                  ON b.lyl_id_no=m.lyl_id_no 
+                  WHERE a.ACTIVE_STS_FLG IN ('ACTIVE00TO02M','ACTIVE03TO04M','ACTIVE05TO06M','ACTIVE07TO09M','ACTIVE10TO12M',
+                                                         'REGISTERED00TO04M','REGISTERED05TO06M','REGISTERED07TO09M','REGISTERED10TO12M')  
+                  AND lyl_mbr_sts_cd='A' 
+                  GROUP BY 1 ) AS a 
+                  WHERE `syw-rts-dev.rts_dataset.rts_member_info_pre`.lyl_id_no=cast(a.lyl_id_no as string); 
+
+UPDATE `syw-rts-dev.rts_dataset.rts_member_info_pre` 
+SET kmte='Y'   
+                  FROM 
+                  (SELECT m.lyl_id_no 
+                  FROM `syw-analytics-repo-prod.unica_cmdm_views.kmart_active_sts_flg` AS a  
+                  JOIN `syw-analytics-repo-prod.lci_loyal_views.sywr_email_id` AS b 
+                  ON a.eml_ad_id=b.eml_ad_id 
+                  JOIN `syw-analytics-repo-prod.lci_loyal_views.sywr_mbr` AS m 
+                  ON b.lyl_id_no=m.lyl_id_no 
+                  WHERE a.ACTIVE_STS_FLG IN ('ACTIVE00TO02M','ACTIVE03TO04M','ACTIVE05TO06M','ACTIVE07TO09M','ACTIVE10TO12M', 
+                                                         'REGISTERED00TO04M','REGISTERED05TO06M','REGISTERED07TO09M','REGISTERED10TO12M')  
+                  AND lyl_mbr_sts_cd='A' 
+                  GROUP BY 1 ) AS a 
+                  WHERE `syw-rts-dev.rts_dataset.rts_member_info_pre`.lyl_id_no=cast(a.lyl_id_no as string); 
+
+
+UPDATE `syw-rts-dev.rts_dataset.rts_member_info_pre`  
+SET sywe='Y' 
+                  FROM 
+                  (SELECT m.lyl_id_no 
+                  FROM `syw-analytics-repo-prod.unica_cmdm_views.sywr_active_sts_flg` AS a  
+                  JOIN `syw-analytics-repo-prod.lci_loyal_views.sywr_email_id` AS b 
+                  ON a.eml_ad_id=b.eml_ad_id 
+                  JOIN `syw-analytics-repo-prod.lci_loyal_views.sywr_mbr` AS m 
+                  ON b.lyl_id_no=m.lyl_id_no 
+                  WHERE a.ACTIVE_STS_FLG IN ('ACTIVE00TO02M','ACTIVE03TO04M','ACTIVE05TO06M','ACTIVE07TO09M','ACTIVE10TO12M', 
+                                                         'REGISTERED00TO04M','REGISTERED05TO06M','REGISTERED07TO09M','REGISTERED10TO12M')  
+                  AND lyl_mbr_sts_cd='A' 
+                  GROUP BY 1 ) AS a 
+                  WHERE `syw-rts-dev.rts_dataset.rts_member_info_pre`.lyl_id_no=cast(a.lyl_id_no as string); 
+
+UPDATE `syw-rts-dev.rts_dataset.rts_member_info_pre`  
+                  SET opt='Y' 
+                  WHERE `syw-rts-dev.rts_dataset.rts_member_info_pre`.srse='Y' 
+                  OR `syw-rts-dev.rts_dataset.rts_member_info_pre`.kmte='Y' 
+                  OR `syw-rts-dev.rts_dataset.rts_member_info_pre`.sywe='Y'; 
+
+UPDATE `syw-rts-dev.rts_dataset.rts_member_info_pre`
+SET ST=s.ST_CD
+                  FROM (
+                  SELECT lyl_id_no,STE_CD AS ST_CD
+                  FROM `syw-analytics-repo-prod.lci_loyal_views.sywr_mbr` AS a
+                  WHERE STE_CD IN
+                  ('AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL'
+                  ,'GA','GU','HI','ID','IL','IN','IA','KS','KY','LA'
+                  ,'ME','MD','MA','MI','FM','MN','MS','MO','MT','NE'
+                  ,'NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR'
+                  ,'PA','PR','RI','SC','SD','TN','TX','UT','VT','VA'
+                  ,'VI','WA','WV','WI','WY')
+                  ) AS s  
+                   WHERE `syw-rts-dev.rts_dataset.rts_member_info_pre`.lyl_id_no=cast(s.lyl_id_no as string);
+
+UPDATE `syw-rts-dev.rts_dataset.rts_member_info_pre` 
+SET mbl =s.opt_mbl 
+                  FROM (SELECT lyl_id_no, case when opt_mbl = 1 then 'Y' else 'N' end AS opt_mbl 
+                  FROM  `syw-analytics-repo-prod.lci_work_tbls.sywr_vld_opt_mbl`  where vald_phn = 1 )s 
+                  WHERE `syw-rts-dev.rts_dataset.rts_member_info_pre`.lyl_id_no=cast(s.lyl_id_no as string);
+
+
+

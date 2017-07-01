@@ -1,0 +1,53 @@
+Algorithm Design class notes:
+--------------------------------
+Recursive means divide and conquer like break the bigger problem into smaller problems. Like solve the problem for smaller number and then do the same for bigger number
+
+Pseudocode for merge sort:
+C=output[length = n]
+A=1st sorted array [n/2]
+B=2nd sorted array [n/2]
+i=1      #here 2 opeations. 1 each
+j=1
+
+for k=1 to n   #for each loop four operations below
+	if A(i) < B(j)
+		C(k) = A(i)
+		i++
+	else [B(j) < A(i)]
+		C(k) = B(j)
+		j++
+end
+
+Now how many operations is needed to achieve this?
+
+Running time of merge:
+Upshot: for an array of m numbers approx (4m+2) operations are needed
+It makes a logarithmic curve and it creates a curve which gets flattened very easily and n grows in value
+
+other sort algorithms are quadratic functions n^2. That's why merge sort with log curve is much faster with bigger n values than other n^2 algorithms.
+The other sorts are:
+selection sort
+insertion sort
+bubble sort
+
+n/2 + 1 <--logn+1 is the number of recursions needed for merge sort
+
+At each level, j=0,1,2,...logn there are 2^j subproblems and each of size n/2^j
+
+For every input array of n numbers, merge sort produces a sorted output array and uses at most 6n*logn+6n operations.
+
+Two nested loops:
+1. does array A have duplicate entries?
+given array of length n
+for i=1 to n
+   for j = i+1 to n
+       if A[i] == A[j] return True
+return false
+running time? O(n^2)
+
+2. Do arrays A, B have a number in common?
+given arrays A,B of length n
+for i = 1 to n
+    for j = 1 to n
+        if A[i] == B[j] return True
+return False

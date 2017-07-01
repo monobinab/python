@@ -1,0 +1,6 @@
+x and y
+
+!(!x or !y)
+
+x or y
+!(!x and !y)
